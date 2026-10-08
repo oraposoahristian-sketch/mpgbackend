@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Products</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 1100px;
+      width: 100%;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    .header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .header p {
+      color: #aaa;
+      font-size: 1.1rem;
+    }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+    }
+    .card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 16px;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: #444;
+    }
+    .card.featured {
+      border-color: #ff424d;
+      position: relative;
+    }
+    .card.featured::before {
+      content: "Most popular";
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ff424d;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: 20px;
+    }
+    .tier {
+      font-size: 0.9rem;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+    .price {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .price span {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #aaa;
+    }
+    .description {
+      color: #bbb;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin: 20px 0 28px;
+      flex-grow: 1;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: #ff424d;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #e03540;
+    }
+    .card:not(.featured) .btn {
+      background: #2a2a2a;
+    }
+    .card:not(.featured) .btn:hover {
+      background: #3a3a3a;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    .modal-header {
+      padding: 24px 24px 16px;
+      border-bottom: 1px solid #2a2a2a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-header h3 {
+      font-size: 1.25rem;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .modal-close:hover {
+      color: #fff;
+    }
+    .modal-body {
+      padding: 24px;
+    }
+    .plan-summary {
+      background: #222;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .plan-summary strong {
+      font-size: 1.1rem;
+    }
+    #paymentBrick_container {
+      min-height: 200px;
+    }
+    .loading {
+      text-align: center;
+      color: #aaa;
+      padding: 40px 0;
+    }
+
+    @media (max-width: 700px) {
+      .header h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Choose your plan</h1>
+      <p>Support and get exclusive access</p>
+    </div>
+    <div class="products">
+      <!-- Plano 1 -->
+      <div class="card">
+        <div class="tier">Basic</div>
+        <h2>Starter Access</h2>
+        <div class="price">$19<span>/month</span></div>
+        <p class="description">
+          Generic product description. Here you put the main benefits of this plan.
+        </p>
+        <button class="btn" onclick="openCheckout('Starter Access', 19, 99.90)">Subscribe</button>
+      </div>
+
+      <!-- Plano 2 -->
+      <div class="card featured">
+        <div class="tier">Intermediate</div>
+        <h2>Full Access</h2>
+        <div class="price">$39<span>/month</span></div>
+        <p class="description">
+          Generic product description. This is the most complete plan.
+        </p>
+        <button class="btn" onclick="openCheckout('Full Access', 39, 199.90)">Subscribe</button>
+      </div>
+
+      <!-- Plano 3 -->
+      <div class="card">
+        <div class="tier">Premium</div>
+        <h2>VIP Access</h2>
+        <div class="price">$79<span>/month</span></div>
+        <p class="description">
+          Generic product description. Includes everything from the previous plans.
+        </p>
+        <button class="btn" onclick="openCheckout('VIP Access', 79, 399.90)">Subscribe</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Finalize payment</h3>
+        <button class="modal-close" onclick="closeCheckout()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="plan-summary">
+          <div>
+            <div style="color:#aaa;font-size:0.85rem;">Plan</div>
+            <strong id="selectedPlanName">—</strong>
+          </div>
+          <div style="text-align:right">
+            <div style="color:#aaa;font-size:0.85rem;">Total</div>
+            <strong id="selectedPlanPrice">—</strong>
+          </div>
+        </div>
+        <div id="paymentBrick_container">
+          <div class="loading">Loading payment form...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://sdk.mercadopago.com/js/v2"></script>
+  <script>
+    // ============================================
+    // CONFIGURAÇÃO
+    // ============================================
+    const PUBLIC_KEY = "APP_USR-ac8fddde-5708-4609-bfb3-8123fe45cbb9"; // sua Public Key
+    const BACKEND_URL = "/api/process_payment";
+    // ============================================
+
+    const mp = new MercadoPago(PUBLIC_KEY, { locale: "pt-BR" });
+
+    let bricksBuilder = null;
+    let cardPaymentBrickController = null;
+    let currentAmount = 0;
+    let currentPlanName = "";
+
+    async function openCheckout(planName, amountUSD, amountBRL) {
+      currentPlanName = planName;
+      currentAmount = amountBRL;
+
+      document.getElementById("selectedPlanName").textContent = planName;
+      document.getElementById("selectedPlanPrice").textContent = `$${amountUSD}`;
+      document.getElementById("checkoutModal").classList.add("active");
+
+      const container = document.getElementById("paymentBrick_container");
+      container.innerHTML = '<div class="loading">Loading payment form...</div>';
+
+      if (cardPaymentBrickController) {
+        try { await cardPaymentBrickController.unmount(); } catch (e) {}
+        cardPaymentBrickController = null;
+      }
+
+      bricksBuilder = mp.bricks();
+
+      const settings = {
+        initialization: {
+          amount: amountBRL
+        },
+        customization: {
+          visual: {
+            style: { theme: "dark" }
+          }
+        },
+        callbacks: {
+          onReady: () => {},
+          onSubmit: (formData) => {
+            return new Promise((resolve, reject) => {
+              fetch(BACKEND_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  ...formData,
+                  description: currentPlanName,
+                  transaction_amount: amountBRL
+                }),
+              })
+                .then((res) => res.json())
+                .then((response) => {
+                  console.log("Payment response:", response);
+                  alert("Pagamento processado! Status: " + (response.status || "ok"));
+                  closeCheckout();
+                  resolve();
+                })
+                .catch((error) => {
+                  console.error(error);
+                  alert("Erro ao processar o pagamento. Tente novamente.");
+                  reject();
+                });
+            });
+          },
+          onError: (error) => console.error("Brick error:", error),
+        },
+      };
+
+      try {
+        cardPaymentBrickController = await bricksBuilder.create(
+          "cardPayment",
+          "paymentBrick_container",
+          settings
+        );
+      } catch (error) {
+        console.error(error);
+        container.innerHTML = '<div class="loading" style="color:#ff6b6b">Erro ao carregar o formulário.</div>';
+      }
+    }
+
+    function closeCheckout() {
+      document.getElementById("checkoutModal").classList.remove("active");
+      if (cardPaymentBrickController) {
+        cardPaymentBrickController.unmount().catch(() => {});
+        cardPaymentBrickController = null;
+      }
+    }
+
+    document.getElementById("checkoutModal").addEventListener("click", function(e) {
+      if (e.target === this) closeCheckout();
+    });
+  </script>
+</body>
+</html>
